@@ -4,7 +4,7 @@
 #include <libusb.h>
 #include <stdbool.h>
 
-#define VID 0x3eb
+#define VID 0x03eb
 #define DID 0x2064
 
 int main(int argc, char* argv[])
