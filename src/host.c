@@ -4,7 +4,7 @@
 #include <libusb.h>
 #include <stdbool.h>
 
-#define VID 0x03EB
+#define VID 0x3eb
 #define DID 0x2064
 
 int main(int argc, char* argv[])
@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 	int initialTrys = 60;
 	while (dev == NULL)
 	{
-		libusb_device_handle* dev = libusb_open_device_with_vid_pid(NULL, VID, DID);
+		dev = libusb_open_device_with_vid_pid(NULL, (uint16_t)VID, (uint16_t)DID);
 		if (dev == NULL)
 		{
 			printf("ERROR: device could not be opened\n");
@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 			default:
 				break;
 		}
-		usleep(100);
+		usleep(100000);
 		bRequest = 0;
 		ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
 		switch (ret)
@@ -68,7 +68,7 @@ int main(int argc, char* argv[])
 			default:
 				break;
 		}
-		usleep(900);
+		usleep(900000);
 	}
 	libusb_close(dev);
 	libusb_exit(NULL);
