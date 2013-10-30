@@ -80,23 +80,6 @@ bool checkLed(unsigned int led)
 	return data[0];
 }
 
-void readUSB()
-{
-	uint8_t bmRequestType = LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN;
-	uint8_t bRequest = 42;
-	uint16_t wValue = 0;
-	uint16_t wIndex = 0;
-	unsigned char data[256];
-	uint16_t wLength = 4;
-	unsigned int timeout = 500;
-	int ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
-	handleRet(ret);
-	printf("%u\n", data[0]);
-	printf("%u\n", data[1]);
-	printf("%u\n", data[2]);
-	printf("%u\n", data[3]);
-}
-
 int main(int argc, char* argv[])
 {
 	libusb_init(NULL);
@@ -110,21 +93,24 @@ int main(int argc, char* argv[])
 	}
 	printf("device initialised\n");
 
-	for (int i=0; i<3; i++)
+	for (int i=0; ; i++)
 	{
 		onLed(0);
-		printf("%u\n", checkLed(0));
+		usleep(100000);
+		onLed(1);
+		usleep(100000);
+		onLed(2);
+		usleep(100000);
+		onLed(3);
 		usleep(100000);
 		offLed(0);
-		printf("%u\n", checkLed(0));
-		usleep(400000);
-		onLed(1);
-		printf("%u\n", checkLed(1));
 		usleep(100000);
 		offLed(1);
-		printf("%u\n", checkLed(1));
-		usleep(400000);
-		//readUSB();
+		usleep(100000);
+		offLed(2);
+		usleep(100000);
+		offLed(3);
+		usleep(100000);
 	}
 
 	libusb_close(dev);
