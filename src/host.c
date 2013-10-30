@@ -27,28 +27,26 @@ void handleRet(int ret)
 	}
 }
 
-void setLed(unsigned int led)
+void onLed(unsigned int led)
 {
 	uint8_t bmRequestType = LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_OUT;
 	uint8_t bRequest = 1;
-	uint16_t wValue = 0;
+	uint16_t wValue = (uint16_t)led;
 	uint16_t wIndex = 0;
 	unsigned char data[256];
-	data[0] = (unsigned char)led;
 	uint16_t wLength = 0;
 	unsigned int timeout = 500;
 	int ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
 	handleRet(ret);
 }
 
-void clearLed(unsigned int led)
+void offLed(unsigned int led)
 {
 	uint8_t bmRequestType = LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_OUT;
 	uint8_t bRequest = 0;
-	uint16_t wValue = 0;
+	uint16_t wValue = (uint16_t)led;
 	uint16_t wIndex = 0;
 	unsigned char data[256];
-	data[0] = (unsigned char)led;
 	uint16_t wLength = 0;
 	unsigned int timeout = 500;
 	int ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
@@ -59,24 +57,22 @@ void toggleLed(unsigned int led)
 {
 	uint8_t bmRequestType = LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_OUT;
 	uint8_t bRequest = 2;
-	uint16_t wValue = 0;
+	uint16_t wValue = (uint16_t)led;
 	uint16_t wIndex = 0;
 	unsigned char data[256];
-	data[0] = (unsigned char)led;
 	uint16_t wLength = 0;
 	unsigned int timeout = 500;
 	int ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
 	handleRet(ret);
 }
 
-bool getLed(unsigned int led)
+bool checkLed(unsigned int led)
 {
-	uint8_t bmRequestType = LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_OUT;
+	uint8_t bmRequestType = LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN;
 	uint8_t bRequest = 3;
-	uint16_t wValue = 0;
+	uint16_t wValue = (uint16_t)led;
 	uint16_t wIndex = 0;
 	unsigned char data[256];
-	data[0] = (unsigned char)led;
 	uint16_t wLength = 0;
 	unsigned int timeout = 500;
 	int ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
@@ -105,9 +101,13 @@ int main(int argc, char* argv[])
 
 	for (int i=0; i<3; i++)
 	{
-		setLed(0);
+		onLed(0);
 		usleep(100000);
-		clearLed(0);
+		offLed(0);
+		usleep(900000);
+		onLed(1);
+		usleep(100000);
+		offLed(1);
 		usleep(900000);
 	}
 
