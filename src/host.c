@@ -88,10 +88,10 @@ int main(int argc, char* argv[])
 		dev = libusb_open_device_with_vid_pid(NULL, (uint16_t)VID, (uint16_t)DID);
 		if (dev == NULL)
 		{
-			printf("ERROR: device could not be opened\n");
 			sleep(1);
 		}
 	}
+	printf("device initialised\n");
 
 	for (int i=0; i<3; i++)
 	{
