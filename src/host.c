@@ -34,9 +34,10 @@ void setLed(unsigned int led)
 	uint16_t wValue = 0;
 	uint16_t wIndex = 0;
 	unsigned char data[256];
+	data[0] = (unsigned char)led;
 	uint16_t wLength = 0;
 	unsigned int timeout = 500;
-	ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
+	int ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
 	handleRet(ret);
 }
 
@@ -47,9 +48,10 @@ void clearLed(unsigned int led)
 	uint16_t wValue = 0;
 	uint16_t wIndex = 0;
 	unsigned char data[256];
+	data[0] = (unsigned char)led;
 	uint16_t wLength = 0;
 	unsigned int timeout = 500;
-	ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
+	int ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
 	handleRet(ret);
 }
 
@@ -60,10 +62,26 @@ void toggleLed(unsigned int led)
 	uint16_t wValue = 0;
 	uint16_t wIndex = 0;
 	unsigned char data[256];
+	data[0] = (unsigned char)led;
 	uint16_t wLength = 0;
 	unsigned int timeout = 500;
-	ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
+	int ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
 	handleRet(ret);
+}
+
+bool getLed(unsigned int led)
+{
+	uint8_t bmRequestType = LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_OUT;
+	uint8_t bRequest = 3;
+	uint16_t wValue = 0;
+	uint16_t wIndex = 0;
+	unsigned char data[256];
+	data[0] = (unsigned char)led;
+	uint16_t wLength = 0;
+	unsigned int timeout = 500;
+	int ret = libusb_control_transfer(dev, bmRequestType, bRequest, wValue, wIndex, data, wLength, timeout);
+	handleRet(ret);
+	return data[0] != (unsigned char)0;
 }
 
 int main(int argc, char* argv[])
