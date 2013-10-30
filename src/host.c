@@ -17,7 +17,7 @@ void handleRet(int ret)
 			printf("ERROR: timeout\n");
 			break;
 		case LIBUSB_ERROR_PIPE:
-			printf("ERROR: broken pipe, I'm sexy and I know it ;)\n");
+			printf("ERROR: broken pipe, I am sexy and I know it ;)\n");
 			break;
 		case LIBUSB_ERROR_NO_DEVICE:
 			printf("ERROR: no device\n");
