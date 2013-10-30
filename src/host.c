@@ -83,18 +83,12 @@ bool checkLed(unsigned int led)
 int main(int argc, char* argv[])
 {
 	libusb_init(NULL);
-	int initialTrys = 60;
 	while (dev == NULL)
 	{
 		dev = libusb_open_device_with_vid_pid(NULL, (uint16_t)VID, (uint16_t)DID);
 		if (dev == NULL)
 		{
 			printf("ERROR: device could not be opened\n");
-			initialTrys--;
-			if (initialTrys == 0)
-			{
-				return -1;
-			}
 			sleep(1);
 		}
 	}
@@ -104,11 +98,11 @@ int main(int argc, char* argv[])
 		onLed(0);
 		usleep(100000);
 		offLed(0);
-		usleep(900000);
+		usleep(400000);
 		onLed(1);
 		usleep(100000);
 		offLed(1);
-		usleep(900000);
+		usleep(400000);
 	}
 
 	libusb_close(dev);
