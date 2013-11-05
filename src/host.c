@@ -25,6 +25,23 @@ void handleRet(int ret)
 		default:
 			break;
 	}
+	ret = libusb_clear_halt(dev, 0);
+	if (ret != 0)
+	{
+		printf("error while cleaning up\n");
+		switch (ret)
+		{
+			case LIBUSB_ERROR_NOT_FOUND:
+				printf("ERROR: endpoint does not exist\n");
+				break;
+			case LIBUSB_ERROR_NO_DEVICE:
+				printf("ERROR: device not found\n");
+				break;
+		}
+		libusb_close(dev);
+		libusb_exit(NULL);
+		exit(-1);
+	}
 }
 
 void onLed(unsigned int led)
