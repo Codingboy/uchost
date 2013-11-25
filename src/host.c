@@ -26,7 +26,7 @@ void handleRet(int ret)
 			break;
 	}
 	ret = libusb_clear_halt(dev, 0);
-	if (ret != 0)
+	if (ret)
 	{
 		printf("error while cleaning up\n");
 		switch (ret)
@@ -38,9 +38,14 @@ void handleRet(int ret)
 				printf("ERROR: device not found\n");
 				break;
 		}
-		libusb_close(dev);
-		libusb_exit(NULL);
-		exit(-1);
+		ret = libusb_clear_halt(dev, 0);
+		if (ret)
+		{
+			printf("ERROR: stall could not be cleared\n");
+			libusb_close(dev);
+			libusb_exit(NULL);
+			exit(-1);
+		}
 	}
 }
 
